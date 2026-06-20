@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<style>
+body {
+    background: transparent;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 30px;
+}
+h2 { color: #ff6b35; margin-bottom: 20px; }
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ff6b35;
+    background: #111;
+    color: white;
+    margin-bottom: 10px;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    background: #ff6b35;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+.result { margin-top: 15px; }
+</style>
+</head>
+<body>
+<h2>🔑 CHECK THỜI HẠN KEY</h2>
+<input type="text" id="keyInput" placeholder="Nhập key để kiểm tra...">
+<button onclick="checkKey()">CHECK</button>
+<div class="result" id="result"></div>
+
+<script>
+const KEYS = {
+    "AimlockPanel-Free101": "2026-09-20",
+    "VIP-999-ABC": "2026-12-26",
+    "ADMIN-KEY-001": "9999-12-31"
+};
+
+function checkKey() {
+    const input = document.getElementById("keyInput").value.trim();
+    const result = document.getElementById("result");
+    if (!KEYS[input]) {
+        result.innerHTML = "❌ Key không tồn tại";
+        result.style.color = "red";
+        return;
+    }
+    const today = new Date();
+    const expiry = new Date(KEYS[input]);
+    const daysLeft = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+    if (daysLeft <= 0) {
+        result.innerHTML = "⛔ Key đã hết hạn";
+        result.style.color = "red";
+    } else {
+        result.innerHTML = `✅ Key hợp lệ<br>⏳ Còn <b>${daysLeft}</b> ngày`;
+        result.style.color = "#00ff99";
+    }
+}
+</script>
+</body>
+</html>
