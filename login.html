@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AimLockMenu_IOS - Login</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #0a0f1f, #020409);
+    color: #ff7a18;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.box {
+    width: 350px;
+    text-align: center;
+    background: rgba(0,0,0,0.5);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,122,24,0.3);
+}
+h1 {
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+    color: #ff7a18;
+}
+.subtitle {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-bottom: 25px;
+}
+input {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,122,24,0.4);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    text-align: center;
+    transition: all 0.3s;
+}
+input:focus {
+    border-color: #ff7a18;
+    box-shadow: 0 0 15px rgba(255,122,24,0.3);
+}
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #ff7a18, #ff9f1c);
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 20px rgba(255,122,24,0.4);
+}
+button:active {
+    transform: scale(0.98);
+}
+#msg {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    min-height: 25px;
+}
+.hidden { display: none !important; }
+.bar {
+    width: 100%;
+    height: 20px;
+    background: #1a1a2e;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 25px;
+    border: 1px solid rgba(255,122,24,0.3);
+}
+.fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff7a18, #ff9f1c, #ff6b35);
+    border-radius: 10px;
+    transition: width 0.15s ease;
+    box-shadow: 0 0 10px rgba(255,122,24,0.5);
+}
+.percent {
+    margin-top: 15px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff9f1c;
+}
+.status {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+.version {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 0.7rem;
+    opacity: 0.4;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+    <div id="loginBox">
+        <h1>🎯 AimLockMenu_IOS</h1>
+        <p class="subtitle">25 Tính Năng VIP | Anti-Ban</p>
+        <input id="keyInput" placeholder="🔑 Nhập key của bạn..." autocomplete="off">
+        <button onclick="checkKey()">🚀 LOGIN</button>
+        <div id="msg"></div>
+    </div>
+
+    <div id="loadingBox" class="hidden">
+        <h1>🎯 AimLockMenu_IOS</h1>
+        <p class="subtitle">Đang khởi tạo hệ thống...</p>
+        <div class="bar"><div class="fill" id="fill"></div></div>
+        <div class="percent" id="percentText">0%</div>
+        <div class="status" id="status">⏳ Initializing...</div>
+    </div>
+</div>
+
+<div class="version">v2.5 | iOS 18-20</div>
+
+<script>
+const KEY_DATABASE = {
+    "QWltbG9ja1BhbmVsLUZyZWUxMDE=": { role: "PREMIUM", expires: "2026-09-20", name: "Free Key" },
+    "VklQLTk5OS1BQkM=": { role: "VIP", expires: "2026-12-26", name: "VIP Key" },
+    "QURNSU4tS0VZLTAwMQ==": { role: "ADMIN", expires: "9999-12-31", name: "Admin Key" }
+};
+
+let attempts = parseInt(localStorage.getItem("aml_attempts") || "0");
+const MAX_ATTEMPTS = 5;
+const LOCK_TIME = 30;
+
+function checkLock() {
+    const lockUntil = localStorage.getItem("aml_lock_until");
+    if (lockUntil) {
+        const lockTime = parseInt(lockUntil);
+        const now = Date.now();
+        if (now < lockTime) {
+            const remainMin = Math.ceil((lockTime - now) / 60000);
+            document.getElementById("msg").innerHTML = `🔒 Bị khóa ${remainMin} phút nữa`;
+            document.getElementById("keyInput").disabled = true;
+            document.querySelector("button").disabled = true;
+            return true;
+        } else {
+            localStorage.removeItem("aml_lock_until");
+            localStorage.removeItem("aml_attempts");
+            attempts = 0;
+        }
+    }
+    return false;
+}
+
+function encodeKey(text) {
+    try { return btoa(text); } catch(e) { return ""; }
+}
+
+function checkKey() {
+    const input = document.getElementById("keyInput").value.trim();
+    const msg = document.getElementById("msg");
+    if (checkLock()) return;
+    if (!input) {
+        msg.innerHTML = "⚠️ Vui lòng nhập key";
+        msg.style.color = "#ffaa00";
+        return;
+    }
+    const encoded = encodeKey(input);
+    if (!KEY_DATABASE[encoded]) {
+        attempts++;
+        localStorage.setItem("aml_attempts", attempts.toString());
+        const remain = MAX_ATTEMPTS - attempts;
+        if (attempts >= MAX_ATTEMPTS) {
+            const lockUntil = Date.now() + (LOCK_TIME * 60000);
+            localStorage.setItem("aml_lock_until", lockUntil.toString());
+            msg.innerHTML = `🔒 Sai quá ${MAX_ATTEMPTS} lần! Khóa ${LOCK_TIME} phút`;
+            msg.style.color = "#ff0000";
+            document.getElementById("keyInput").disabled = true;
+            document.querySelector("button").disabled = true;
+        } else {
+            msg.innerHTML = `❌ Key không đúng (Còn ${remain} lần thử)`;
+            msg.style.color = "#ff4d4d";
+        }
+        return;
+    }
+    const keyData = KEY_DATABASE[encoded];
+    const expiryDate = new Date(keyData.expires);
+    const today = new Date();
+    if (today > expiryDate) {
+        msg.innerHTML = "⛔ Key đã hết hạn. Liên hệ admin để gia hạn.";
+        msg.style.color = "#ff0000";
+        return;
+    }
+    msg.innerHTML = "✅ Key hợp lệ! Đang đăng nhập...";
+    msg.style.color = "#00ff99";
+    localStorage.setItem("aml_attempts", "0");
+    localStorage.removeItem("aml_lock_until");
+    localStorage.setItem("aml_logged", "true");
+    localStorage.setItem("aml_role", keyData.role);
+    localStorage.setItem("aml_key", input);
+    localStorage.setItem("aml_expiry", keyData.expires);
+    setTimeout(() => { startLoading(keyData); }, 500);
+}
+
+function startLoading(keyData) {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("loadingBox").classList.remove("hidden");
+    let percent = 0;
+    const fill = document.getElementById("fill");
+    const percentText = document.getElementById("percentText");
+    const status = document.getElementById("status");
+    const steps = [
+        { at: 5, text: "🔍 Đang xác thực key..." },
+        { at: 10, text: "📡 Kết nối máy chủ..." },
+        { at: 20, text: "✅ Key hợp lệ: " + keyData.role },
+        { at: 30, text: "🛡️ Khởi tạo Anti-Ban..." },
+        { at: 40, text: "💉 Injecting core module..." },
+        { at: 50, text: "🎯 Loading Aimlock Engine..." },
+        { at: 60, text: "🔫 Loading Weapon Mods..." },
+        { at: 70, text: "🖥️ Loading ESP/Wallhack..." },
+        { at: 80, text: "⚙️ Tối ưu hệ thống..." },
+        { at: 90, text: "🔐 Bypass Detection..." },
+        { at: 95, text: "✨ Hoàn tất cài đặt..." },
+        { at: 100, text: "🎉 Sẵn sàng! Chuyển hướng..." }
+    ];
+    const timer = setInterval(() => {
+        percent += Math.floor(Math.random() * 4) + 1;
+        if (percent > 100) percent = 100;
+        fill.style.width = percent + "%";
+        percentText.innerText = percent + "%";
+        steps.forEach(s => {
+            if (percent >= s.at && percent < s.at + 5) status.innerText = s.text;
+        });
+        if (percent >= 100) {
+            clearInterval(timer);
+            status.innerText = "🎉 Đăng nhập thành công!";
+            setTimeout(() => { window.location.href = "index.html"; }, 1000);
+        }
+    }, 100);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkLock();
+    document.getElementById('keyInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') checkKey();
+    });
+    document.getElementById('keyInput').focus();
+});
+
+(function() {
+    const logged = localStorage.getItem("aml_logged");
+    const expiry = localStorage.getItem("aml_expiry");
+    if (logged === "true" && expiry) {
+        const expDate = new Date(expiry);
+        const today = new Date();
+        if (today < expDate) window.location.href = "index.html";
+    }
+})();
+</script>
+</body>
+</html>
