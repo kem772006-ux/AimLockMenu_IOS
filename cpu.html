@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU BOOST - GAMMA JACK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: transparent;
+            color: white;
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .cpu-section {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid #00bcd4;
+        }
+        
+        .section-title {
+            color: #00bcd4;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .boost-item {
+            background: rgba(0, 188, 212, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        .boost-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .boost-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #00bcd4;
+        }
+        
+        .boost-status {
+            background: #00bcd4;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .slider-container {
+            margin: 15px 0;
+        }
+        
+        .range-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00bcd4;
+            cursor: pointer;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .boost-btn {
+            background: linear-gradient(135deg, #00bcd4, #0097a7);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .boost-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+        }
+        
+        .performance-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00bcd4;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #00bcd4;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+    </style>
+</head>
+<body>
+    <div class="cpu-section">
+        <div class="section-title">⚡ Tối Ưu Máy</div>
+        
+        <div class="boost-item">
+            <div class="boost-header">
+                <div class="boost-name">FPS Booster</div>
+                <div class="boost-status" id="fpsStatus">OFF</div>
+            </div>
+            <p style="opacity: 0.8; margin-bottom: 15px;">Giúp Tối ưu Game Để Tăng FPS</p>
+            
+            <div class="slider-container">
+                <input type="range" min="30" max="120" value="60" class="range-slider" id="fpsSlider">
+                <div class="slider-labels">
+                    <span>30 FPS</span>
+                    <span id="fpsValue">60 FPS</span>
+                    <span>120 FPS</span>
+                </div>
+            </div>
+            
+            <button class="boost-btn" onclick="applyFPSBoost()">APPLY FPS BOOSTER</button>
+        </div>
+        
+        <div class="boost-item">
+            <div class="boost-header">
+                <div class="boost-name">PING OPTIMIZER</div>
+                <div class="boost-status" id="lagStatus">OFF</div>
+            </div>
+            <p style="opacity: 0.8; margin-bottom: 15px;">Tối Ưu Mạng Giúp Giảm Ping</p>
+            
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span>Auto Optimize:</span>
+                <label class="switch">
+                    <input type="checkbox" id="autoLagReduce" onchange="toggleAutoLagReduce()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <button class="boost-btn" onclick="activateLagReduce()">ACTIVATE PING OPTIMIZER</button>
+        </div>
+	
+        <div class="performance-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="currentFPS">120</div>
+                <div class="stat-label">CURRENT FPS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="pingValue">45ms</div>
+                <div class="stat-label">PING</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FPS Slider
+        const fpsSlider = document.getElementById('fpsSlider');
+        const fpsValue = document.getElementById('fpsValue');
+        
+        fpsSlider.addEventListener('input', function() {
+            fpsValue.textContent = this.value + ' FPS';
+        });
+        
+        // Memory Slider
+        const memorySlider = document.getElementById('memorySlider');
+        const memoryValue = document.getElementById('memoryValue');
+        
+        memorySlider.addEventListener('input', function() {
+            const value = this.value;
+            if (value < 33) {
+                memoryValue.textContent = 'Minimal';
+            } else if (value < 66) {
+                memoryValue.textContent = 'Balanced';
+            } else {
+                memoryValue.textContent = 'Aggressive';
+            }
+        });
+        
+        // Các hàm xử lý
+        function applyFPSBoost() {
+            const fps = fpsSlider.value;
+            document.getElementById('fpsStatus').textContent = 'ON';
+            document.getElementById('currentFPS').textContent = fps;
+            parent.showNotification(`✅ FPS Boost applied: ${fps} FPS`);
+        }
+        
+        function toggleAutoLagReduce() {
+            const checkbox = document.getElementById('autoLagReduce');
+            const status = document.getElementById('lagStatus');
+            
+            if (checkbox.checked) {
+                status.textContent = 'AUTO';
+                parent.showNotification('🔄 Auto Lag Reduce activated');
+            } else {
+                status.textContent = 'OFF';
+                parent.showNotification('❌ Auto Lag Reduce disabled');
+            }
+        }
+        
+        function activateLagReduce() {
+            document.getElementById('lagStatus').textContent = 'ON';
+            document.getElementById('pingValue').textContent = '25ms';
+            parent.showNotification('✅ Lag Reducer activated');
+        }
+        
+        function cleanMemory() {
+            document.getElementById('memoryStatus').textContent = 'ON';
+            document.getElementById('memoryUsage').textContent = '35%';
+            parent.showNotification('🧹 Memory cleaned successfully');
+            
+            // Reset sau 3 giây
+            setTimeout(() => {
+                document.getElementById('memoryStatus').textContent = 'OFF';
+            }, 3000);
+        }
+        
+        // Simulate performance stats
+function updateStats() {
+    setInterval(() => {
+        const currentFPS = document.getElementById('currentFPS');
+        const ping = document.getElementById('pingValue');
+        const memory = document.getElementById('memoryUsage');
+        const cpu = document.getElementById('cpuUsage');
+
+        // FPS random
+        currentFPS.textContent = Math.floor(Math.random() * 20) + 55;
+
+        // PING random 20–50ms
+        ping.textContent = Math.floor(Math.random() * 30) + 20 + 'ms';
+
+        // MEMORY random
+        memory.textContent = Math.floor(Math.random() * 20) + 50 + '%';
+
+        // CPU random
+        cpu.textContent = Math.floor(Math.random() * 30) + 30 + '%';
+
+    }, 2000);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', updateStats);
+
+		
+		
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', updateStats);
+    </script>
+</body>
+</html>
