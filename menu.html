@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIMLOCK PANEL | 25 TÍNH NĂNG VIP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: transparent;
+            color: white;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .menu-section {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 2px solid #ff6b35;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            padding: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-header h2 {
+            font-size: 1.4rem;
+            color: white;
+        }
+        
+        .toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .section-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .section-content.active {
+            padding: 20px;
+            max-height: 1000px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            background: rgba(255, 107, 53, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .feature-info {
+            flex: 1;
+        }
+        
+        .feature-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            color: #ffa726;
+        }
+        
+        .feature-description {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #ff6b35;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+		
+		.dpi-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2; /* QUAN TRỌNG */
+}
+
+.apk-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.apk-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* NỀN */
+.apk-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #2b2b2b;
+    border-radius: 24px;
+    transition: 0.25s;
+}
+
+/* NÚT TRÒN */
+.apk-slider::before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    top: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.25s;
+}
+
+/* ON */
+.apk-switch input:checked + .apk-slider {
+    background-color: #ff6b35;
+}
+
+.apk-switch input:checked + .apk-slider::before {
+    transform: translateX(20px);
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- GAME MANAGER SECTION -->
+    <div class="menu-section">
+        <div class="section-header" onclick="toggleSection('game-manager')">
+            <h2>🎮 V1</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content" id="game-manager-content">
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Aimlock Premium</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="godMode" onchange="toggleFeature('godMode')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Chỉnh DPI</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <div class="aim-slider-wrap">
+    <input
+        type="range"
+        min="0"
+        max="999"
+        value="0"
+        id="aimSlider"
+    >
+    <label class="apk-switch">
+    <input type="checkbox" id="gameManager">
+    <span class="apk-slider"></span>
+</label>
+
+</div>
+
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Fix Rung</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="noRecoil" onchange="toggleFeature('noRecoil')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Nhẹ Tâm V2</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="rapidFire" onchange="toggleFeature('rapidFire')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Buff 120 HZ</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="rapidFire" onchange="toggleFeature('rapidFire')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">ShotBot</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="rapidFire" onchange="toggleFeature('rapidFire')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Bám Đầu</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="rapidFire" onchange="toggleFeature('rapidFire')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Fix Lố</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="magicBullet" onchange="toggleFeature('magicBullet')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Tâm Ảo</div>
+                        <div class="feature-description"></div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="magicBullet" onchange="toggleFeature('magicBullet')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SYSTEM MODS SECTION -->
+    <div class="menu-section">
+        <div class="section-header" onclick="toggleSection('system-mods')">
+            <h2>⚙️ SYSTEM MODS</h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content" id="system-mods-content">
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Anti-Ban</div>
+                        <div class="feature-description">Chống phát hiện</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="antiBan" onchange="toggleFeature('antiBan')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">FPS Boost</div>
+                        <div class="feature-description">Tăng FPS tối đa</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="fpsBoost" onchange="toggleFeature('fpsBoost')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-info">
+                        <div class="feature-name">Lag Reducer</div>
+                        <div class="feature-description">Giảm lag tối đa</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="lagReduce" onchange="toggleFeature('lagReduce')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sections
+        function toggleSection(section) {
+            const content = document.getElementById(section + '-content');
+            const icon = event.currentTarget.querySelector('.toggle-icon');
+            
+            content.classList.toggle('active');
+            icon.textContent = content.classList.contains('active') ? '▲' : '▼';
+        }
+        
+        // Toggle features
+        function toggleFeature(featureId) {
+            const checkbox = document.getElementById(featureId);
+            const featureName = checkbox.closest('.feature-item').querySelector('.feature-name').textContent;
+            
+            if (checkbox.checked) {
+                parent.showNotification(`✅ Đã bật: ${featureName}`);
+            } else {
+                parent.showNotification(`❌ Đã tắt: ${featureName}`);
+            }
+        }
+        
+        // Auto open first section
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleSection('game-manager');
+        });
+    </script>
+</body>
+</html>
